@@ -1,0 +1,270 @@
+-*- text -*-
+
+Sandia OpenSHMEM NEWS -- history of user-visible changes.
+
+v1.4.3
+------
+- Added NBI atomics support to performance suite benchmarks.
+- Fixed shmem_ctx_t type compatibility with C++ and older C compilers.
+
+v1.4.3rc1
+---------
+- Added proposed OpenSHMEM put-with-signal routines to shmemx interaces.
+- Added proposed OpenSHMEM wait/test-any/some/all to shmemx interfaces.
+- Added proposed OpenSHMEM nonblocking fetching atomic operations to shmemx
+  interfaces.
+- Added proposed OpenSHMEM SHMEM_CTX_INVALID constant to shmemx interfaces.
+- Added put-with-signal optimization that uses the FI_FENCE capability (see
+  --enable-ofi-fence for details).
+- Added support for backtrace printing when SOS aborts (see SHMEM_BACKTRACE
+  environment variable for details).
+- OFI transport merged cntr and cq endpoints, improving resource utilization.
+- Fixed issue with missing pshmem symbols in proposed profiling interfaces.
+- Improved support for SLURM using PMI-1.
+- Unit tests for the C++ generic interfaces (currently an SOS extension) were
+  moved to the "test/shmemx" directory and context creation failure handling
+  was improved in all tests to improve portability of the SOS test suite.
+- Constant and type declarations were moved from shmem.h to shmem-def.h to
+  eliminate dependence of pshmem.h and shmemx.h on shmem.h
+
+v1.4.2
+------
+- This full release includes the changes listed below for v1.4.2rc1 and the
+  following additional change.
+- Improved performance when using OFI thread completion model, by releasing the
+  context lock when blocked in quiet/fence operations.
+
+v1.4.2rc1
+---------
+- Added support for using MPI as the process manager, via --enable-pmi-mpi.
+- Added option to flush stdout/stderr during barrier operations, enabled via
+  SHMEM_BARRIERS_FLUSH environment variable.
+- Added PE affinity information to debugging output, enabled via SHMEM_DEBUG
+  environment variable.
+- Fixed issue with SHMEM_OFI_PROVIDER environment variable being unrecognized.
+- Added experimental performance counters API extension (see shmemx.h)
+- Added --enable-ofi-mr={basic,scalable,rma-event} and removed --with-ofi-mr,
+  --disable-mr-scalable, and --enable-mr-rma-event.
+- Renamed --with-total-data-ordering configuration flag to
+  --enable-total-data-ordering.
+- Added multithreaded lock unit test to demonstrate the use of hierarchical
+  locking to enable multithreaded usage of OpenSHMEM locks.
+- Updated perf. suite tests to improve bandwidth reporting and improve coverage
+  over atomic operations.
+- Updated manual progress to automatically enable completion polling.
+- Updated target counter binding in OFI to comply with libfabric requirements.
+- Fixed invalid locking in context destroy debug message when bounce buffering
+  is not enabled on the context.
+- Simplified the OFI random STX allocator.
+
+v1.4.1
+------
+- This full release includes the changes listed below for v1.4.1rc1 and the
+  following additional changes.
+- Improved the fidelity of throughput measurements in the performance testing
+  suite.
+- Added check to performance suite to verify that source and target processes
+  are located on different nodes.
+- Fixed threading synchronization race in context destruction.
+- Added a multi-threaded lock unit test with an accompanying library for
+  thread-safe usage of OpenSHMEM locks.
+- Additional minor code cleanups and bugfixes (see git log for details).
+
+
+v1.4.1rc1
+---------
+- Added multi-threaded implementations of the shmem_perf_suite throughput
+  benchmarks, which make use of OpenSHMEM contexts and OpenMP.
+- Modified the test suite to enable building and running external to the SOS
+  repository (see https://github.com/openshmem-org/tests-sos).
+- Provided a pkg-config file for Sandia OpenSHMEM named 'sos'.
+- Added the SHMEM_OFI_STX_DISABLE_PRIVATE mode which disables STX
+  privatization, potentially improving load balance across transmit resources.
+- SHMEM_OFI_STX_MAX default value reduced to 1 to avoid resource exhaustion
+  with some providers.
+- Improved the portability of SOS's error-reporting utilities.
+- Introduced support for the shmem_query_thread routine.
+- Added an optional probe routine to assist OFI transport progress (see
+  --enable-manual-progress), which may improve the performance of pending
+  communication operations for some providers (notably, PSM2).
+- Added the shmemx_register_gettid function, which allows users to pass a
+  function pointer for setting custom thread IDs.
+- Add check for ASLR when remote virtual addressing optimization is enabled.
+- Added the --disable-aslr-check options to disable the check for address space
+  layout randomization.
+- Added a unit test to validate the memory barriers in various SOS
+  synchronization routines.
+- Multiple bugfixes in the unit tests, performance suite, Portals finalization,
+  OFI STX management, the SOS simple build script, the default poll limit, and
+  more.
+- Fix incorrect SHMEM_MINOR_VERSION value.
+
+
+v1.4.0
+------
+- Support for OpenSHMEM 1.4 specification.
+- New features include: Thread safety, communication management API (contexts),
+  test routines, sync routines, calloc for symmetric objects, bitwise atomic
+  operations, and updated C11 generic selection bindings.  See OpenSHMEM 1.4
+  Specification, Annex G for details.
+- Deprecations include: Fortran API, shmem_wait routines, mpp header directory,
+  and SMA-prefixed environment variables.  See OpenSHMEM 1.4 Specification,
+  Annex F for details.
+- Added support for OFI FI_THREAD_COMPLETION thread safety model, needed to use
+  the SHMEM_THREAD_MULTIPLE mode with the PSM2 provider and others (see
+  --enable-thread-completion).  For providers that support FI_THREAD_SAFE, this
+  mode may also provider better performance for private and serialized
+  contexts.
+- Added manpages and unit tests for OpenSHMEM 1.4 API routines.
+- Optimized performance of private and serialized contexts.
+- Improved performance of shmem_fence operation.
+- Added memory barriers needed to support shared memory interactions between
+  threads and PEs.
+- Updated unit tests to remove use of deprecated API routines.
+- Added support to OFI transport for sharing STX resources across contexts.
+- Added several environment variables that can be used to control STX resource
+  management in the OFI transport: SHMEM_OFI_STX_MAX, SHMEM_OFI_STX_ALLOCATOR,
+  and SHMEM_OFI_STX_THRESHOLD.  See README for details.
+- Updated data segment exposure method to improve compatibility with tools.
+- Updated thread safety support in Portals transport, eliminating several
+  possible races in communication tracking/completion code.
+
+v1.4.0rc2
+---------
+- Added support to OFI transport for sharing STX resources across contexts.
+- Added several environment variables that can be used to control STX resource
+  management in the OFI transport: SHMEM_OFI_STX_MAX, SHMEM_OFI_STX_ALLOCATOR,
+  and SHMEM_OFI_STX_THRESHOLD.  See README for details.
+- Added support for returning gracefully when context creation is unsuccessful.
+- Updated data segment exposure method to improve compatibility with tools.
+- Updated thread safety support in Portals, eliminating several possible races
+  in communication tracking/completion code.
+
+v1.4.0rc1
+---------
+
+- Added support for OFI FI_THREAD_COMPLETION thread safety model, needed to use
+  the SHMEM_THREAD_MULTIPLE mode with the PSM2 provider and others (see
+  --enable-thread-completion).  For providers that support FI_THREAD_SAFE, this
+  mode may also provider better performance for private and serialized
+  contexts.
+- Added manpages for OpenSHMEM 1.4 API routines.
+- Improved performance of private and serialized contexts.
+- Improved performance of shmem_fence operation.
+- Added memory barriers needed to support shared memory interactions between
+  threads and PEs.
+- Updated unit tests to remove use of deprecated API routines.
+
+v1.4.0a1
+--------
+- Support for OpenSHMEM 1.4 specification.
+- New features include: Thread safety, communication management API (contexts),
+  test routines, sync routines, calloc for symmetric objects, bitwise atomic
+  operations, and updated C11 generic selection bindings.
+- Deprecations include: Fortran API, shmem_wait routines, mpp header directory,
+  and SMA-prefixed environment variables.
+- This is an alpha release; full API support is provided, but the
+  implementation may contain bugs and is not yet optimized for performance.
+
+v1.3.4
+------
+- Added manpages for OpenSHMEM API routines.
+- Added polling limit control variables SMA_OFI_TX_POLL_LIMIT and
+  SMA_OFI_RX_POLL_LIMIT (see README for details) to allow control over quiet
+  and wait polling limits, respectively.
+- Rewrite of environment variable management code and improved info output.
+- Added support for processor atomics in thread-safe build.
+- Added support for local communication optimization (--enable-memcpy).
+- Added support for libfabric FI_MR_RMA_EVENT memory registration mode.
+- Added experimental support for the PMIx process management interface
+  (--with-pmix).
+- Fixed completion race in multithreaded mode.
+- Fixed bugs in support for zero-length point-to-point and collective
+  communication.
+- Multiple bugfixes to test suite, including GUPS benchmark
+
+v1.3.3
+------
+- Fixed dissemination barrier race that could lead to incorrect synchronization.
+- Improved collect and all-to-all collectives performance.
+- Improved error reporting and debugging output.
+- Added support for proposed bitwise atomics (see shmemx.h).
+- Added shmemx_pcontrol function to profiling interface extension (see shmemx.h).
+- Added symbol hiding support in SHMEM library.
+- Fixed symmetric heap corruption bug in GUPS benchmark (see test/apps/gups.c).
+- Added target-side measurement and asymmetric configuration support to
+  performance suite benchmarks.
+
+v1.3.2
+------
+- Improved support for proposed multithreading extension (see shmemx.h),
+  enabled at compile time via --enable-threads.
+- Enabled single-process, direct execution of SOS binaries with simple PMI.
+- Added argument error checking for all SHMEM routines, enabled at compile time
+  via --enable-error-checking.
+- Multiple build system improvements, including support for VPATH builds.
+- Added new C and Fortran bindings generator that generates all headers and
+  bindings, including profiling interfaces.
+- Added support for Fortran complex reductions API.
+- Updated Fortran bindings to use short (OpenSHMEM style) header by default.
+- Updated SHMEM_DEBUG output to include detailed build information.
+- Added --enable-completion-polling build option to poll in quiet/fence
+  operations rather than waiting.  This can improve performance for libfabric
+  providers that require software-generated progress.
+- Added --disable-bounce-buffers build option to disable bounce buffering by
+  default (i.e. set SHMEM_BOUNCE_SIZE to 0 by default).
+- Improved library path propagation (rpath) in compiler wrappers.
+- Improved PMI simple build and fixed integration of libpmi_simple library.
+- Update symmetric heap allocator to dlmalloc v2.8.6.
+- Update PMI-1 client library from MPICH.
+- Improved bandwidth efficiency and fixed bug in collect routines.
+- Fixed several bugs in tree-based collectives when using PE active sets.
+- Fixed several bugs in recursive-doubling reduction routine when using PE
+  active sets and when source and target buffers overlap.
+- Fixed synchronization bug in memory management routines.
+
+1.3.1
+-----
+- Support for allocating the symmetric heap using Linux huge pages.
+- Improved support for Cray XC platforms.
+- Improved support for variations in atomics support across OFI providers.
+- Initial support for thread safety in the OFI transport.
+- Fix several issues with C/C++ bindings and profiling interface.
+- Added new benchmarks, unit tests, and examples.
+
+1.3.0
+-----
+- Support for OpenSHMEM 1.3 specification, including nonblocking communication,
+  fetch/set atomics, all-to-all collectives, C11 generic bindings, and addition
+  of const/volatile to C API.
+- Improvements to error checking of OpenSHMEM calls and internal debugging
+  enabled through --enable-error-checking configure option.
+- Improvements to C++ compatibility, including support for type-generic
+  bindings in C++.
+- Support for fabric and domain selection in the OFI transport, see
+  SMA_OFI_DOMAIN/FABRIC environment variables in the README file for details.
+- Support for systems using the Aries network via the OFI GNI provider.
+- Enabled XPMEM support in combination with the OFI transport.
+- Support for PMI2-compliant process managers.
+- The OFI transport automatically falls back to software reductions when the
+  provider does not support the particular combination of atomic operation and
+  datatype for a given OpenSHMEM reduction.
+- Added multiple communication performance benchmarks to the test suite.
+- Multiple bug fixes and improvements to stability and performance.
+
+1.2.0
+-----
+- Support for OpenSHMEM 1.2 specification
+- Support for libfabric
+- Integrated support for PMI-1 compliant launcher (e.g. MPICH Hydra)
+- Build now generates 'oshrun' launcher script for launching OpenSHMEM applications
+- Multiple bug fixes and improvements to stability and performance
+- Add shmemx.h and shmemx.fh header files for Sandia OpenSHMEM extensions
+- Add support for short, SGI-style Fortran header (configure option
+  --disable-long-fortran-header) required by UH test suite
+- Removed stale copies of UH tests, upstreamed changes, and moved to external
+  testing model.  Extensive bug fixes and improvements to remaining test suite.
+
+1.0a8
+-----
+- Initial public release

@@ -1,0 +1,8 @@
+treematch/tm_mt.lo: \
+ ../../../../../openmpi-4.0.1-source/ompi/mca/topo/treematch/treematch/tm_mt.c \
+ /usr/include/stdc-predef.h \
+ ../../../../../openmpi-4.0.1-source/ompi/mca/topo/treematch/treematch/tm_mt.h
+
+/usr/include/stdc-predef.h:
+
+../../../../../openmpi-4.0.1-source/ompi/mca/topo/treematch/treematch/tm_mt.h:
